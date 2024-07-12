@@ -1,75 +1,91 @@
 from Database.dbConection import DbConection
-from utils.mouse import mouse_controll
-from utils.keyboard import keyboard_controll
+from utils.CraftTools import craftItem
 import time
-import pyautogui
+import json
+from pyautogui import displayMousePosition
+from colorama import Fore, Style
 # import pytesseract
 # from PIL import Image
 
 
 
 def run():
+    # select mode
+    Modes = ["Database", "Display", "ca", "la", "aa"]
+    aw = ""
+
+    while aw not in Modes:
+        print("Modes: Database, ca, la, aa, Display")
+        aw = input("Select mode: ")
+
+    if aw == "Database": 
+        runFromDatabase()
+    elif aw == "la":
+        runFromArray()
+    elif aw == "aa":
+        addToArray()
+    elif aw == "ca":
+        createArray()
+    elif aw == "Display":
+        displayMousePosition()
+
+def runFromDatabase():
     db = DbConection()
 
     print("Autocrafting started")
 
-    for i in range(5, 0):
+    for i in range(0, 5):
         time.sleep(1)
-        print(f"{i}")
+        print(f"{i}/5")
 
-    for i in range(150, 160):
+    for i in range(150, 155):
         item1, item2, result = db.get(i)
-        toTextBox()
-        keyboard_controll.typeText(item1)
-        dragItem(1546, 97, 1150, 130)
-        clearSearch()
-        toTextBox()
-        keyboard_controll.typeText(item2)
-        dragItem(1546, 97, 1150, 130)
-        time.sleep(0.05)
-        print(f"Crafted {result}")
-        clean()
-        clearSearch()
+        sucess = craftItem(item1, item2)
+        if sucess != False:
+            print(Fore.LIGHTBLUE_EX + f"Crafted {result}")
+        else:
+            print(Fore.LIGHTYELLOW_EX + f"Failed to craft {result}")
 
-# def screenshot(ltx, lty, rbx, rby):
-#     width = rbx - ltx
-#     height = rby - lty
-#     return pyautogui.screenshot(region=(ltx, lty, width, height))
+    print(Fore.LIGHTGREEN_EX + "Autocrafting finished")
 
-def toTextBox():
-    mouse_controll.click(1612, 1124)
+def createArray():
+    items = []
+    
+    while True:
+        item = input("Enter an item, or start crafting by pressing enter: ")
+        if item == "":
+            break
+        items.append(item)
+    
+    name = input("Enter the name of the collection: ")
+    open(f'saves/{name}.json', 'w').close()
+    with open(f'saves/{name}.json', 'w') as file:
+        json.dump(items, file)
+    
+def addToArray():
+    name = input("Enter the name of the collection: ")
+    with open(f'saves/{name}.json', 'r') as file:
+        items = json.load(file)
+    
+    while True:
+        item = input("Enter an item, or start crafting by pressing enter: ")
+        if item == "":
+            break
+        items.append(item)
+    
+    with open(f'saves/{name}.json', 'w') as file:
+        json.dump(items, file)
 
-def clean():
-    mouse_controll.click(1464, 1127)
-
-def toItem():
-    mouse_controll.click(1546, 97)
-
-def toBoard():
-    mouse_controll.click(900, 500)
-
-def clearSearch():
-    mouse_controll.click(1840, 1124)
-
-def dragItem(start_x, start_y, end_x, end_y):
-    # Move to the starting position
-    pyautogui.moveTo(start_x, start_y)
-    # Perform the drag-and-drop action
-    pyautogui.mouseDown()
-    pyautogui.moveTo(end_x, end_y, duration=0.1)  # Duration is optional
-    pyautogui.mouseUp()
-
-
-
-# lt 1090 120
-# rb 1444 260
-
-    #scr = screenshot(1090, 120, 1444, 260).save("screenshot.png")
-    #text = pytesseract.image_to_string("screenshot.png")
-    #if text.toLower() != result.toLower():
-    #    print(f"Error crafting {result}")
-    #     continue
-    # else:
-    #     
-
-print("Autocrafting finished")
+def runFromArray():
+    name = input("Enter the name of the collection: ")
+    with open(f'saves/{name}.json', 'r') as file:
+        items = json.load(file)
+    for i in range(0, (len(items) -1)):
+        item = items[i]
+        for e in range (1+i, len(items)):
+            item2 = items[e]
+            sucess = craftItem(item, item2)
+            if sucess != False:
+                print(Fore.LIGHTBLUE_EX + f"Crafted")
+            else:
+                print(Fore.LIGHTYELLOW_EX + f"Failed to craft")

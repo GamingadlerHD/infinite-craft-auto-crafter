@@ -124,6 +124,9 @@ celerybeat.pid
 # config file
 settings.yaml
 
+# collections
+saves/*
+
 # Environments
 .env
 .venv
