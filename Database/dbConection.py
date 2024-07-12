@@ -1,7 +1,7 @@
 import sqlite3
 
 class DbConection:
-    def __init__(self, db_name='infinite-craft.db'):
+    def __init__(self, db_name='./Database/infinite-craft.db'):
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
 
