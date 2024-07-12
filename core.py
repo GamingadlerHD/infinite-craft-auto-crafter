@@ -1,6 +1,7 @@
 from Database.dbConection import DbConection
 from utils.CraftTools import craftItem
 import time
+import os
 import json
 from pyautogui import displayMousePosition
 from colorama import Fore, Style
@@ -11,23 +12,25 @@ from colorama import Fore, Style
 
 def run():
     # select mode
-    Modes = ["Database", "Display", "ca", "la", "aa"]
-    aw = ""
+    Modes = ["Database", "Display", "Create Collection", "Load Collection", "Add to Collection"]
+    awnser = ""
 
-    while aw not in Modes:
-        print("Modes: Database, ca, la, aa, Display")
-        aw = input("Select mode: ")
+    while awnser not in Modes:
+        print("Modes: Database, Create Collection, Load Collection, Add to Collection, Display")
+        awnser = input("Select mode: ")
 
-    if aw == "Database": 
-        runFromDatabase()
-    elif aw == "la":
-        runFromArray()
-    elif aw == "aa":
-        addToArray()
-    elif aw == "ca":
-        createArray()
-    elif aw == "Display":
-        displayMousePosition()
+    match awnser:
+        case "Database":
+            runFromDatabase()
+        case "Load Collection":
+            runFromArray()
+        case "Add to Collection":
+            addToArray()
+        case "Create Collection":
+            createArray()
+        case "Display":
+            displayMousePosition()
+        
 
 def runFromDatabase():
     db = DbConection()
@@ -50,6 +53,7 @@ def runFromDatabase():
 
 def createArray():
     items = []
+    os.makedirs("saves", exist_ok=True)
     
     while True:
         item = input("Enter an item, or start crafting by pressing enter: ")

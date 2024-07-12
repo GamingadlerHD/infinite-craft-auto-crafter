@@ -37,6 +37,12 @@ class Settings:
         The x coordinate of the clean button
     clean_search_y: int
         The y coordinate of the clean button
+    no_item_x: int
+        The x coordinate of the no item text
+    no_item_y: int
+        The y coordinate of the no item text
+    save_factor: float
+        The factor by which wait times are multiplied
     
     """
 
@@ -56,12 +62,19 @@ class Settings:
     clean_search_x: int = 1840
     clean_search_y: int = 1124
 
+    no_item_x: int = 1664
+    no_item_y: int = 113
+
+    # config
+    save_factor: float = 1
 
 settings = Settings()
 
 
 def read_settings(path: "Path"):
     content = yaml.load(path.read_text(), yaml.Loader)
+
+    settings.save_factor = content["config"]["save_factor"]
 
     settings.search_x = content["coordinates"]["search_bar"]["search_x"]
     settings.search_y = content["coordinates"]["search_bar"]["search_y"]
@@ -78,6 +91,9 @@ def read_settings(path: "Path"):
     settings.clean_search_x = content["coordinates"]["clean_search"]["clean_search_x"]
     settings.clean_search_y = content["coordinates"]["clean_search"]["clean_search_y"]
     
+    settings.no_item_x = content["coordinates"]["no_item"]["no_item_x"]
+    settings.no_item_y = content["coordinates"]["no_item"]["no_item_y"]
+
     log.info("Settings loaded.")
 
 
@@ -85,7 +101,18 @@ def write_default_settings(path: "Path"):
     path.write_text(
         """# yaml-language-server: $schema=json-config-ref.json
 
+# configuration for the bot
+config:
+
+    # the factor by which wait times are multiplied, recommended to be 1 or above.
+    # if you want to speed up the bot, you can increase this value
+    # but be aware that it might cause the bot to fail, since
+    # the website might not be able to keep up with the bot
+
+    save_factor: 1    
+    
 # Contains all the coordinates needed for the bot to function
+# default values are for Microsoft Edge, 1920x1080 resolution
 coordinates:
 
     # coordinates for the search bar, where you search for items
@@ -122,6 +149,14 @@ coordinates:
         clean_search_x: 1840
     
         clean_search_y: 1124
+
+    # coordinates for the no item text, 
+    # which appears when the item is not found (position on black text, rgb has to be 0, 0, 0)
+    no_item:
+
+        no_item_x: 1664
+
+        no_item_y: 113
 
   """
     )
