@@ -91,8 +91,6 @@ def read_settings(path: "Path"):
     settings.no_item_x = content["coordinates"]["no_item"]["no_item_x"]
     settings.no_item_y = content["coordinates"]["no_item"]["no_item_y"]
 
-    log.info("Settings loaded.")
-
 
 def write_default_settings(path: "Path"):
     path.write_text(

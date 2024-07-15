@@ -12,11 +12,11 @@ from colorama import Fore, Style
 
 def run():
     # select mode
-    Modes = ["Database", "Display", "Create Collection", "Load Collection", "Add to Collection"]
+    Modes = ["Database", "Display", "Create Collection", "Load Collection", "One to Many", "Converter", "Add to Collection"]
     awnser = ""
 
     while awnser not in Modes:
-        print("Modes: Database, Create Collection, Load Collection, Add to Collection, Display")
+        print("Modes: Database, Create Collection, Load Collection, Add to Collection, One to Many, Converter, Display")
         awnser = input("Select mode: ")
 
     match awnser:
@@ -30,6 +30,10 @@ def run():
             createArray()
         case "Display":
             displayMousePosition()
+        # case "One to Many":
+            # oneToMany()
+        case "Converter":
+            converter()
         
 
 def runFromDatabase():
@@ -93,3 +97,15 @@ def runFromArray():
                 print(Fore.LIGHTBLUE_EX + f"Crafted")
             else:
                 print(Fore.LIGHTYELLOW_EX + f"Failed to craft")
+
+def converter():
+    name = input("Enter the name of the collection: ")
+    with open(f'saves/{name}.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    
+    elements = [element['text'] for element in data['elements']]
+
+    newName = input("Enter the new name: ")
+
+    with open(f'saves/{newName}.json', 'w') as file:
+        json.dump(elements, file)
