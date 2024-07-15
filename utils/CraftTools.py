@@ -15,14 +15,14 @@ def clean():
     mouse_controll.click(settings.clean_x, settings.clean_y)
 
 def dragItemToBoard(time=0.15):
-    mouse_controll.dragItem(settings.item_x, settings.item_y, settings.board_x, settings.board_y, time)
+    mouse_controll.dragItem(settings.item_x, settings.item_y, settings.board_x, settings.board_y, time * settings.save_factor)
 
 def enterText(string):
     pyperclip.copy(string)
     keyboard_controll.pasteText("")
 
 def checkItemExists():
-    rgb = pixel(1664, 113)
+    rgb = pixel(settings.no_item_x, settings.no_item_y)
     return rgb != (0, 0, 0)
 
 def getItem(item):
