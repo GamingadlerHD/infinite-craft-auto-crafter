@@ -50,6 +50,8 @@ def runFromDatabase():
         print(f"{i}/5")
 
     for i in range(start, stop):
+        if keyboard_controll.keyPressed('x'):
+            break
         item1, item2, result = db.get(i)
         sucess = craftItem(item1, item2)
         if sucess != False:
@@ -95,6 +97,8 @@ def runFromArray():
     for i in range(0, (len(items) -1)):
         item = items[i]
         for e in range (1+i, len(items)):
+            if keyboard_controll.keyPressed('x'):
+                break
             item2 = items[e]
             sucess = craftItem(item, item2)
             if sucess != False:

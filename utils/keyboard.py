@@ -1,5 +1,6 @@
 import time
 import pyautogui
+import keyboard
 
 class keyboard_controll:
     def typeText(string):
@@ -11,3 +12,7 @@ class keyboard_controll:
 
     def pasteText(string):
         pyautogui.hotkey('ctrl', 'v')
+
+    def keyPressed(key):
+        return keyboard.is_pressed(key)
+        
