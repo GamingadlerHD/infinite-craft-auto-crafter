@@ -1,5 +1,6 @@
 from Database.dbConection import DbConection
 from utils.CraftTools import craftItem
+from utils.keyboard import keyboard_controll
 import time
 import os
 import json
@@ -12,11 +13,11 @@ from colorama import Fore, Style
 
 def run():
     # select mode
-    Modes = ["Database", "Display", "Create Collection", "Load Collection", "One to Many", "Converter", "Add to Collection"]
+    Modes = ["Database", "Display", "Create Collection", "Load Collection", "One to Collection", "Converter", "Add to Collection"]
     awnser = ""
 
     while awnser not in Modes:
-        print("Modes: Database, Create Collection, Load Collection, Add to Collection, One to Many, Converter, Display")
+        print("Modes: Database, Create Collection, Load Collection, Add to Collection, One to Collection, Converter, Display")
         awnser = input("Select mode: ")
 
     match awnser:
@@ -30,8 +31,8 @@ def run():
             createArray()
         case "Display":
             displayMousePosition()
-        # case "One to Many":
-            # oneToMany()
+        case "One to Collection":
+            oneToCollection()
         case "Converter":
             converter()
         
@@ -39,13 +40,16 @@ def run():
 def runFromDatabase():
     db = DbConection()
 
+    start = int(input("Enter start number: "))
+    stop = int(input("Enter stop number: "))
+
     print("Autocrafting started")
 
     for i in range(0, 5):
         time.sleep(1)
         print(f"{i}/5")
 
-    for i in range(150, 155):
+    for i in range(start, stop):
         item1, item2, result = db.get(i)
         sucess = craftItem(item1, item2)
         if sucess != False:
@@ -109,3 +113,19 @@ def converter():
 
     with open(f'saves/{newName}.json', 'w') as file:
         json.dump(elements, file)
+
+def oneToCollection():
+    name = input("Enter the name of the collection: ")
+    item2 = input("Enter the item to craft with: ")
+    with open(f'saves/{name}.json', 'r') as file:
+        items = json.load(file)
+    for i in range(0, (len(items) -1)):
+        if keyboard_controll.keyPressed('x'):
+            break
+        item = items[i]
+        sucess = craftItem(item, item2)
+        if sucess != False:
+            print(Fore.LIGHTBLUE_EX + f"Crafted")
+        else:
+            print(Fore.LIGHTYELLOW_EX + f"Failed to craft")
+            
