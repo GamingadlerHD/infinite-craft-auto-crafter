@@ -127,7 +127,7 @@ def oneToCollection():
         if keyboard_controll.keyPressed('x'):
             break
         item = items[i]
-        sucess = craftItem(item, item2)
+        sucess = craftItem(item, item2, ((i % 6)-3))
         if sucess != False:
             print(Fore.LIGHTBLUE_EX + f"Crafted")
         else:

@@ -14,8 +14,8 @@ def clearSearch():
 def clean():
     mouse_controll.click(settings.clean_x, settings.clean_y)
 
-def dragItemToBoard(time=0.15):
-    mouse_controll.dragItem(settings.item_x, settings.item_y, settings.board_x, settings.board_y, time * settings.save_factor)
+def dragItemToBoard(posOffsetNumber, time=0.15):
+    mouse_controll.dragItem(settings.item_x, settings.item_y, settings.board_x, settings.board_y + (80 * posOffsetNumber), time * settings.save_factor)
 
 def enterText(string):
     pyperclip.copy(string)
@@ -25,21 +25,21 @@ def checkItemExists():
     rgb = pixel(settings.no_item_x, settings.no_item_y)
     return rgb != (0, 0, 0)
 
-def getItem(item):
+def getItem(item, posOffsetNumber):
     clearSearch()
     toTextBox()
     enterText(item)
     if checkItemExists():
-        dragItemToBoard()
+        dragItemToBoard(posOffsetNumber)
         return True
     else:
         return False
         
 
-def craftItem(item1, item2):
+def craftItem(item1, item2, posOffsetNumber=0):
     ex = True
 
-    ex = getItem(item1)
+    ex = getItem(item1, posOffsetNumber)
 
     if not ex:
         clean()
@@ -47,7 +47,7 @@ def craftItem(item1, item2):
     
     time.sleep(0.05)
 
-    ex = getItem(item2)
+    ex = getItem(item2, posOffsetNumber)
 
     clean()
 
